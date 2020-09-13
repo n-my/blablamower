@@ -1,0 +1,51 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+}
+
+plugins {
+    id 'scala'
+    id 'com.github.maiflai.scalatest' version '0.26'
+    id 'org.scoverage' version '4.0.1'
+    id 'com.github.alisiikh.scalastyle' version '3.4.0'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    def scalaVersion = '2.11'
+    def scalaVersionMinor = '12'
+    compile "com.github.scopt:scopt_$scalaVersion:3.7.1"
+    compile "com.typesafe.scala-logging:scala-logging_$scalaVersion:3.9.2"
+    compile "ch.qos.logback:logback-classic:1.2.3"
+    testCompile "org.scalatest:scalatest_$scalaVersion:3.0.1"
+    testCompile "org.scalamock:scalamock_$scalaVersion:4.4.0"
+    testRuntime 'org.pegdown:pegdown:1.4.2'
+}
+
+scalastyle {
+    scalaVersion = '2.11'
+    failOnWarning = false
+    verbose = false
+    quiet = false
+}
+
+jar {
+    zip64 = true
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    } {
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+    }
+}
